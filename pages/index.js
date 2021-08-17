@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import api from '../src/services/api'
+import api from '../src/services/api';
 
 export default function Home({pokemons}) {
   console.log(pokemons)
@@ -12,8 +12,10 @@ export default function Home({pokemons}) {
         </h1>
         <ul>
           {pokemons.map(info => (
-            <div key={info.name}>
-              <Link href={'/pokemon/' + info.name}>{info.name}</Link>
+            <div key={info.entry_number}>
+              <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${info.entry_number}.png`}/>
+              <Link href={`/pokemon/${info.entry_number}`}>{info.pokemon_species.name}</Link>
+
             </div>
           ))}
         </ul>
@@ -22,12 +24,13 @@ export default function Home({pokemons}) {
   )
 };
 
-export async function getServerSideProps() {
-  const res = await api.get('/pokemon')
+export async function getStaticProps() {
+  const res = await api.get('/pokedex/2/');
+
 
   return{
     props: {
-      pokemons : res.data.results
+      pokemons : res.data.pokemon_entries
     }
   }
 }
